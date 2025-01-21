@@ -34,6 +34,7 @@ const AuthHome = ({navigation}: props) => {
             navigation.navigate(authNavigations.SIGNUP);
           }}
           size="large"
+          variant="outlined"
         />
       </View>
     </SafeAreaView>
@@ -45,9 +46,6 @@ export default AuthHome;
 const styles = StyleSheet.create({
   container: {flex: 1, margin: 30, alignItems: 'center'},
   img: {width: '100%', height: '100%'},
-  imgContainer: {
-    flex: 1.5,
-    width: Dimensions.get('screen').width / 2,
-  },
+  imgContainer: {flex: 1.5, width: Dimensions.get('screen').width / 2},
   buttonContainer: {flex: 0.5, gap: 10},
 });
