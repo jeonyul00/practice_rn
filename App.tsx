@@ -7,12 +7,12 @@
 
 import {NavigationContainer} from '@react-navigation/native';
 import React from 'react';
-import AuthStackNavi from './src/navigation/AuthStackNavi';
+import RootNavi from './src/navigations/root/RootNavi';
 
 function App() {
   return (
     <NavigationContainer>
-      <AuthStackNavi />
+      <RootNavi />
     </NavigationContainer>
   );
 }
