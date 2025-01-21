@@ -1,29 +1,18 @@
 import {SafeAreaView, StyleSheet, View} from 'react-native';
-import React, {useState} from 'react';
+import React from 'react';
 import InputField from '../../components/InputField';
+import CustomButton from '../../components/CustomButton';
+import useForm from '../../hooks/useForm';
+import {validateLogin} from '../../utils/validate';
 
 const Login = () => {
-  const [values, setValues] = useState({
-    email: '',
-    pwd: '',
-  });
-  const [touched, setTouched] = useState({
-    email: false,
-    pwd: false,
+  const login = useForm({
+    initialValue: {email: '', pwd: ''},
+    validate: validateLogin,
   });
 
-  const handleChangeValues = (name: string, text: string) => {
-    setValues({
-      ...values,
-      [name]: text,
-    });
-  };
-
-  const handleBlur = (name: string) => {
-    setTouched({
-      ...touched,
-      [name]: true,
-    });
+  const handleSubmit = () => {
+    console.log(login.values);
   };
 
   return (
@@ -32,18 +21,20 @@ const Login = () => {
         <InputField
           placeholder="이메일"
           inputMode="email"
-          value={values.email}
-          onChangeText={text => handleChangeValues('email', text)}
-          onBlur={() => handleBlur('email')}
+          {...login.getTextInputProps('email')}
         />
         <InputField
           placeholder="비밀번호"
           secureTextEntry
-          value={values.pwd}
-          onChangeText={text => handleChangeValues('pwd', text)}
-          onBlur={() => handleBlur('pwd')}
+          {...login.getTextInputProps('pwd')}
         />
       </View>
+      <CustomButton
+        label="로그인"
+        variant="filled"
+        size="large"
+        onPress={handleSubmit}
+      />
     </SafeAreaView>
   );
 };
@@ -57,5 +48,6 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     gap: 10,
+    marginBottom: 30,
   },
 });
