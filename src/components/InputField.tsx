@@ -5,10 +5,11 @@ import {
   Text,
   TextInputProps,
   View,
+  TextInput,
 } from 'react-native';
-import React, {useRef} from 'react';
-import {TextInput} from 'react-native-gesture-handler';
+import React, {ForwardedRef, forwardRef, useRef} from 'react';
 import {colors} from '../const';
+import {mergeRefs} from '../utils/common';
 
 interface InputFieldProps extends TextInputProps {
   disable?: boolean;
@@ -17,34 +18,40 @@ interface InputFieldProps extends TextInputProps {
 
 const deviceHeight = Dimensions.get('screen').height;
 
-const InputField = ({disable = false, error, ...props}: InputFieldProps) => {
-  const innerRef = useRef<TextInput | null>(null);
+const InputField = forwardRef(
+  (
+    {disable = false, error, ...props}: InputFieldProps,
+    ref?: ForwardedRef<TextInput>,
+  ) => {
+    const innerRef = useRef<TextInput | null>(null);
 
-  const onPress = () => {
-    innerRef.current?.focus();
-  };
-  return (
-    <Pressable onPress={onPress}>
-      <View
-        style={[
-          styles.container,
-          disable && styles.disable,
-          error && styles.error,
-        ]}>
-        <TextInput
-          style={[styles.input, disable && styles.disable]}
-          {...props}
-          placeholderTextColor={colors.GRAY_500}
-          editable={!disable}
-          autoCapitalize="none"
-          spellCheck={false}
-          autoCorrect={false}
-        />
-        {!!error && <Text style={styles.errorText}>{error}</Text>}
-      </View>
-    </Pressable>
-  );
-};
+    const onPress = () => {
+      innerRef.current?.focus();
+    };
+    return (
+      <Pressable onPress={onPress}>
+        <View
+          style={[
+            styles.container,
+            disable && styles.disable,
+            error && styles.error,
+          ]}>
+          <TextInput
+            ref={ref ? mergeRefs(innerRef, ref) : ref}
+            style={[styles.input, disable && styles.disable]}
+            {...props}
+            placeholderTextColor={colors.GRAY_500}
+            editable={!disable}
+            autoCapitalize="none"
+            spellCheck={false}
+            autoCorrect={false}
+          />
+          {!!error && <Text style={styles.errorText}>{error}</Text>}
+        </View>
+      </Pressable>
+    );
+  },
+);
 
 export default InputField;
 
