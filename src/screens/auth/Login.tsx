@@ -4,16 +4,18 @@ import InputField from '../../components/InputField';
 import CustomButton from '../../components/CustomButton';
 import useForm from '../../hooks/useForm';
 import {validateLogin} from '../../utils/validate';
+import useAuth from '../../hooks/querys/useAuth';
 
 const Login = () => {
   const login = useForm({
-    initialValue: {email: '', pwd: ''},
+    initialValue: {email: '', password: ''},
     validate: validateLogin,
   });
+  const {loginMutation} = useAuth();
   const pwdRef = useRef<TextInput | null>(null);
 
   const handleSubmit = () => {
-    console.log(login.values);
+    loginMutation.mutate(login.values);
   };
 
   return (
@@ -30,7 +32,7 @@ const Login = () => {
         <InputField
           placeholder="비밀번호"
           secureTextEntry
-          {...login.getTextInputProps('pwd')}
+          {...login.getTextInputProps('password')}
           blurOnSubmit={false}
           returnKeyType="join"
           onSubmitEditing={handleSubmit}

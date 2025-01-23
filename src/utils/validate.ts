@@ -1,25 +1,25 @@
 type UserInfo = {
   email: string;
-  pwd: string;
+  password: string;
 };
 
 type Signup = {
   email: string;
-  pwd: string;
+  password: string;
   pwdConfirm: string;
 };
 
 export const validateLogin = (values: UserInfo) => {
   const error = {
     email: '',
-    pwd: '',
+    password: '',
   };
 
   if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(values.email)) {
     error.email = '올바른 이메일 형식이 아닙니다.';
   }
-  if (!(values.pwd.length >= 8 && values.pwd.length < 20)) {
-    error.pwd = '비번 8 ~20자 사이로 입력';
+  if (!(values.password.length >= 8 && values.password.length < 20)) {
+    error.password = '비번 8 ~20자 사이로 입력';
   }
 
   return error;
@@ -28,17 +28,17 @@ export const validateLogin = (values: UserInfo) => {
 export const validateSigup = (values: Signup) => {
   const error = {
     email: '',
-    pwd: '',
+    password: '',
     pwdConfirm: '',
   };
 
   if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(values.email)) {
     error.email = '올바른 이메일 형식이 아닙니다.';
   }
-  if (!(values.pwd.length >= 8 && values.pwd.length < 20)) {
-    error.pwd = '비번 8 ~20자 사이로 입력';
+  if (!(values.password.length >= 8 && values.password.length < 20)) {
+    error.password = '비번 8 ~20자 사이로 입력';
   }
-  if (values.pwd !== values.pwdConfirm) {
+  if (values.password !== values.pwdConfirm) {
     error.pwdConfirm = '비밀번호가 일치하지 않음';
   }
   return error;

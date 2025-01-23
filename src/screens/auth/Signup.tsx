@@ -5,17 +5,23 @@ import useForm from '../../hooks/useForm';
 import {validateSigup} from '../../utils/validate';
 import CustomButton from '../../components/CustomButton';
 import {TextInput} from 'react-native-gesture-handler';
+import useAuth from '../../hooks/querys/useAuth';
 
 const Signup = () => {
   const signup = useForm({
-    initialValue: {email: '', pwd: '', pwdConfirm: ''},
+    initialValue: {email: '', password: '', pwdConfirm: ''},
     validate: validateSigup,
   });
+  const {signupMutation, loginMutation} = useAuth();
   const pwdRef = useRef<TextInput | null>(null);
   const pwdConfirmRef = useRef<TextInput | null>(null);
 
   const handleSubmit = () => {
-    console.log(signup.values);
+    const {email, password} = signup.values;
+    signupMutation.mutate(
+      {email, password},
+      {onSuccess: () => loginMutation.mutate({email, password})},
+    );
   };
 
   return (
@@ -33,7 +39,7 @@ const Signup = () => {
         <InputField
           placeholder="비밀번호"
           secureTextEntry
-          {...signup.getTextInputProps('pwd')}
+          {...signup.getTextInputProps('password')}
           returnKeyType="next"
           blurOnSubmit={false}
           onSubmitEditing={() => pwdConfirmRef.current?.focus()}
