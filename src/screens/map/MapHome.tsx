@@ -7,6 +7,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {MainDrawerParamList} from '../../navigations/drawer/MainDrawerNavi';
 import {DrawerScreenProps} from '@react-navigation/drawer';
 import {useUserLocation} from '../../hooks/useUserLocation';
+import commonStyle from '../../style/mapStyle';
 
 type Props = DrawerScreenProps<MainDrawerParamList, 'Home'>;
 
@@ -47,10 +48,11 @@ const MapHome = ({navigation}: Props) => {
         showsUserLocation
         followsUserLocation
         // showsMyLocationButton={true} // custom
+        customMapStyle={commonStyle}
       />
       <View style={styles.buttonList}>
         <Pressable style={styles.mapButton} onPress={usePressUserLocation}>
-          <Text>내 위치</Text>
+          <Text style={styles.drawerText}>내 위치</Text>
         </Pressable>
       </View>
     </SafeAreaView>
