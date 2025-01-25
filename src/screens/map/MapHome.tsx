@@ -1,13 +1,20 @@
 import {Pressable, SafeAreaView, StyleSheet, Text, View} from 'react-native';
-import React, {useRef} from 'react';
+import React, {useRef, useState} from 'react';
 import useAuth from '../../hooks/querys/useAuth';
-import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
+import MapView, {
+  Callout,
+  LatLng,
+  LongPressEvent,
+  Marker,
+  PROVIDER_GOOGLE,
+} from 'react-native-maps';
 import {colors} from '../../const';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {MainDrawerParamList} from '../../navigations/drawer/MainDrawerNavi';
 import {DrawerScreenProps} from '@react-navigation/drawer';
 import {useUserLocation} from '../../hooks/useUserLocation';
 import commonStyle from '../../style/mapStyle';
+import CustomMaker from '../../components/CustomMaker';
 
 type Props = DrawerScreenProps<MainDrawerParamList, 'Home'>;
 
@@ -16,6 +23,7 @@ const MapHome = ({navigation}: Props) => {
   const inset = useSafeAreaInsets();
   const mapRef = useRef<MapView | null>(null);
   const {userLocation, error} = useUserLocation();
+  const [selected, setSelected] = useState<LatLng>();
 
   const handleDrawer = () => {
     navigation.openDrawer();
@@ -34,6 +42,10 @@ const MapHome = ({navigation}: Props) => {
     });
   };
 
+  const handleonLongPress = ({nativeEvent}: LongPressEvent) => {
+    setSelected(nativeEvent.coordinate);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <Pressable
@@ -49,7 +61,13 @@ const MapHome = ({navigation}: Props) => {
         followsUserLocation
         // showsMyLocationButton={true} // custom
         customMapStyle={commonStyle}
-      />
+        onLongPress={handleonLongPress}>
+        {selected && (
+          <Callout>
+            <CustomMaker coordinate={selected} color="BLUE" score={1} />
+          </Callout>
+        )}
+      </MapView>
       <View style={styles.buttonList}>
         <Pressable style={styles.mapButton} onPress={usePressUserLocation}>
           <Text style={styles.drawerText}>내 위치</Text>

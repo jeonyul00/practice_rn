@@ -5,8 +5,8 @@ import {useAppState} from './useAppState';
 
 export function useUserLocation() {
   const [userLocation, setUserLocation] = useState<LatLng>({
-    latitude: 0,
-    longitude: 0,
+    latitude: 37.5516032365118,
+    longitude: 126.98989626020192,
   });
   const [error, setError] = useState(false);
   const {isComback} = useAppState();
