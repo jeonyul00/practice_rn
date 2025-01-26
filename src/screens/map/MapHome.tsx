@@ -1,29 +1,35 @@
-import {Pressable, SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import {
+  Alert,
+  Pressable,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import React, {useRef, useState} from 'react';
 import useAuth from '../../hooks/querys/useAuth';
 import MapView, {
   Callout,
   LatLng,
   LongPressEvent,
-  Marker,
   PROVIDER_GOOGLE,
 } from 'react-native-maps';
-import {colors} from '../../const';
+import {colors, mapNavigations} from '../../const';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {MainDrawerParamList} from '../../navigations/drawer/MainDrawerNavi';
 import {DrawerScreenProps} from '@react-navigation/drawer';
 import {useUserLocation} from '../../hooks/useUserLocation';
 import commonStyle from '../../style/mapStyle';
 import CustomMaker from '../../components/CustomMaker';
+import {MapStackParamList} from '../../navigations/stack/MapStackNavi';
 
-type Props = DrawerScreenProps<MainDrawerParamList, 'Home'>;
+type Props = DrawerScreenProps<MapStackParamList, 'MapHome'>;
 
 const MapHome = ({navigation}: Props) => {
   const {} = useAuth();
   const inset = useSafeAreaInsets();
   const mapRef = useRef<MapView | null>(null);
   const {userLocation, error} = useUserLocation();
-  const [selected, setSelected] = useState<LatLng>();
+  const [selected, setSelected] = useState<LatLng | null>(null);
 
   const handleDrawer = () => {
     navigation.openDrawer();
@@ -40,6 +46,21 @@ const MapHome = ({navigation}: Props) => {
       longitudeDelta: 0.0421,
       latitudeDelta: 0.0922,
     });
+  };
+
+  const handlePressAddPost = () => {
+    if (!selected) {
+      Alert.alert(
+        '추가할 위치를 선택해주세요.',
+        '지도를 길게 누르면 위치가 선택됩니다.',
+      );
+      return;
+    }
+
+    if (selected) {
+      navigation.navigate(mapNavigations.ADD_POST, {location: selected});
+    }
+    setSelected(null);
   };
 
   const handleonLongPress = ({nativeEvent}: LongPressEvent) => {
@@ -69,6 +90,9 @@ const MapHome = ({navigation}: Props) => {
         )}
       </MapView>
       <View style={styles.buttonList}>
+        <Pressable style={styles.mapButton} onPress={handlePressAddPost}>
+          <Text style={styles.drawerText}>add</Text>
+        </Pressable>
         <Pressable style={styles.mapButton} onPress={usePressUserLocation}>
           <Text style={styles.drawerText}>내 위치</Text>
         </Pressable>
@@ -101,7 +125,7 @@ const styles = StyleSheet.create({
   drawerText: {
     color: colors.WHITE,
     fontWeight: '500',
-    fontSize: 16,
+    fontSize: 12,
   },
   buttonList: {
     position: 'absolute',

@@ -43,3 +43,15 @@ export const validateSigup = (values: Signup) => {
   }
   return error;
 };
+
+export const validateAddPost = (values: {title: string}) => {
+  const error = {
+    title: '',
+    desc: '',
+  };
+
+  if (values.title.trim() === '') {
+    error.title = '제목은 1~10자 이내로 입력해주세요';
+  }
+  return error;
+};
