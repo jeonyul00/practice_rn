@@ -1,8 +1,12 @@
 import axios from 'axios';
+import {Platform} from 'react-native';
 
-const api = axios.create({
-  baseURL: 'http://localhost:3030',
+const axiosInstance = axios.create({
+  baseURL:
+    Platform.OS === 'android'
+      ? 'http://10.0.2.2:3030'
+      : 'http://localhost:3030',
   withCredentials: true,
 });
 
-export default api;
+export default axiosInstance;

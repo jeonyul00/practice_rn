@@ -1,10 +1,10 @@
 import {useEffect, useRef, useState} from 'react';
 import {AppState} from 'react-native';
 
-export function useAppState() {
+function useAppState() {
   const appState = useRef(AppState.currentState);
   const [appStateVisible, setAppStateVisible] = useState(appState.current);
-  const [isComback, setIsComback] = useState(false);
+  const [isComeback, setIsComeback] = useState(false);
 
   useEffect(() => {
     const subscription = AppState.addEventListener('change', nextAppState => {
@@ -12,12 +12,13 @@ export function useAppState() {
         appState.current.match(/inactive|background/) &&
         nextAppState === 'active'
       ) {
-        setIsComback(true);
+        setIsComeback(true);
       }
 
       if (appState.current.match(/active/) && nextAppState === 'background') {
-        setIsComback(false);
+        setIsComeback(false);
       }
+
       appState.current = nextAppState;
       setAppStateVisible(appState.current);
     });
@@ -27,5 +28,7 @@ export function useAppState() {
     };
   }, []);
 
-  return {isComback, appStateVisible};
+  return {isComeback, appStateVisible};
 }
+
+export default useAppState;

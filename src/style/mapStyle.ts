@@ -1,8 +1,8 @@
-// import type {ThemeMode} from '@/types';
+import type {ThemeMode} from '@/types';
 
-// const getMapStyle = (mode: ThemeMode) => {
-//   return mapStyle[mode];
-// };
+const getMapStyle = (mode: ThemeMode) => {
+  return mapStyle[mode];
+};
 
 const commonStyle = [
   {
@@ -369,4 +369,4 @@ const mapStyle = {
   ],
 };
 
-export default commonStyle;
+export default getMapStyle;

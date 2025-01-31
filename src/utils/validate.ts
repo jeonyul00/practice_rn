@@ -1,57 +1,88 @@
-type UserInfo = {
+import {Category} from '@/types';
+
+function isBlank(value: string) {
+  return value.trim() === '';
+}
+
+type UserInfomation = {
   email: string;
   password: string;
 };
 
-type Signup = {
-  email: string;
-  password: string;
-  pwdConfirm: string;
-};
-
-export const validateLogin = (values: UserInfo) => {
-  const error = {
+function validateUser(values: UserInfomation) {
+  const errors = {
     email: '',
     password: '',
   };
 
-  if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(values.email)) {
-    error.email = '올바른 이메일 형식이 아닙니다.';
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email)) {
+    errors.email = '올바른 이메일 형식이 아닙니다.';
   }
-  if (!(values.password.length >= 8 && values.password.length < 20)) {
-    error.password = '비번 8 ~20자 사이로 입력';
+  if (!(values.password.length >= 8 && values.password.length <= 20)) {
+    errors.password = '비밀번호는 8~20자 사이로 입력해주세요.';
   }
 
-  return error;
-};
+  return errors;
+}
 
-export const validateSigup = (values: Signup) => {
-  const error = {
-    email: '',
-    password: '',
-    pwdConfirm: '',
-  };
+function validateLogin(values: UserInfomation) {
+  return validateUser(values);
+}
 
-  if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(values.email)) {
-    error.email = '올바른 이메일 형식이 아닙니다.';
-  }
-  if (!(values.password.length >= 8 && values.password.length < 20)) {
-    error.password = '비번 8 ~20자 사이로 입력';
-  }
-  if (values.password !== values.pwdConfirm) {
-    error.pwdConfirm = '비밀번호가 일치하지 않음';
-  }
-  return error;
-};
+function validateSignup(values: UserInfomation & {passwordConfirm: string}) {
+  const errors = validateUser(values);
+  const signupErrors = {...errors, passwordConfirm: ''};
 
-export const validateAddPost = (values: {title: string}) => {
-  const error = {
+  if (values.password !== values.passwordConfirm) {
+    signupErrors.passwordConfirm = '비밀번호가 일치하지않습니다.';
+  }
+
+  return signupErrors;
+}
+
+function validateAddPost(values: {title: string}) {
+  const errors = {
     title: '',
-    desc: '',
+    description: '',
   };
 
-  if (values.title.trim() === '') {
-    error.title = '제목은 1~10자 이내로 입력해주세요';
+  if (isBlank(values.title)) {
+    errors.title = `제목은 1~30자 이내로 입력해주세요.`;
   }
-  return error;
+
+  return errors;
+}
+
+function validateEditProfile(values: {nickname: string}) {
+  const errors = {
+    nickname: '',
+  };
+
+  if (isBlank(values.nickname)) {
+    errors.nickname = '닉네임을 입력해주세요.';
+  }
+
+  return errors;
+}
+
+function validateCategory(values: Category) {
+  const errors = {
+    RED: '',
+    GREEN: '',
+    YELLOW: '',
+    BLUE: '',
+    PURPLE: '',
+  };
+
+  //
+
+  return errors;
+}
+
+export {
+  validateLogin,
+  validateSignup,
+  validateAddPost,
+  validateEditProfile,
+  validateCategory,
 };

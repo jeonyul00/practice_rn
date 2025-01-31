@@ -5,12 +5,13 @@ const setEncryptStorage = async <T>(key: string, data: T) => {
 };
 
 const getEncryptStorage = async (key: string) => {
-  const data = await EncryptedStorage.getItem(key);
-  return data ? JSON.parse(data) : null;
+  const storedData = await EncryptedStorage.getItem(key);
+
+  return storedData ? JSON.parse(storedData) : null;
 };
 
 const removeEncryptStorage = async (key: string) => {
-  const data = await EncryptedStorage.getItem(key);
+  const data = await getEncryptStorage(key);
   if (data) {
     await EncryptedStorage.removeItem(key);
   }
