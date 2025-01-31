@@ -21,6 +21,7 @@ import {useUserLocation} from '../../hooks/useUserLocation';
 import commonStyle from '../../style/mapStyle';
 import CustomMaker from '../../components/CustomMaker';
 import {MapStackParamList} from '../../navigations/stack/MapStackNavi';
+import {useGetMarkers} from '../../hooks/querys/getMarkers';
 
 type Props = DrawerScreenProps<MapStackParamList, 'MapHome'>;
 
@@ -30,6 +31,7 @@ const MapHome = ({navigation}: Props) => {
   const mapRef = useRef<MapView | null>(null);
   const {userLocation, error} = useUserLocation();
   const [selected, setSelected] = useState<LatLng | null>(null);
+  const {data: markers = []} = useGetMarkers();
 
   const handleDrawer = () => {
     navigation.openDrawer();
@@ -82,7 +84,20 @@ const MapHome = ({navigation}: Props) => {
         followsUserLocation
         // showsMyLocationButton={true} // custom
         customMapStyle={commonStyle}
-        onLongPress={handleonLongPress}>
+        onLongPress={handleonLongPress}
+        region={{
+          ...userLocation,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        }}>
+        {markers.map(value => (
+          <CustomMaker
+            key={value.id}
+            color={value.color}
+            score={value.score}
+            coordinate={{latitude: value.latitude, longitude: value.longitude}}
+          />
+        ))}
         {selected && (
           <Callout>
             <CustomMaker coordinate={selected} color="BLUE" score={1} />
